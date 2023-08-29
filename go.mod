@@ -3,8 +3,9 @@ module github.com/Murphy-hub/helloclient
 go 1.19
 
 require (
-	github.com/Murphy-hub/hello v0.0.0-00010101000000-000000000000
+	github.com/cosmos/cosmos-sdk v0.46.7
 	github.com/ignite/cli v0.26.1
+	github.com/stc-community/iot-depin-protocol v0.0.0-20230828085630-918db71ca4e8
 	github.com/tendermint/tendermint v0.34.24
 )
 
@@ -26,7 +27,6 @@ require (
 	github.com/confio/ics23/go v0.9.0 // indirect
 	github.com/cosmos/btcutil v1.0.5 // indirect
 	github.com/cosmos/cosmos-proto v1.0.0-alpha8 // indirect
-	github.com/cosmos/cosmos-sdk v0.46.7 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gorocksdb v1.2.0 // indirect
 	github.com/cosmos/iavl v0.19.4 // indirect

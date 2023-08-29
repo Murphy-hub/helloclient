@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	ttypes "github.com/tendermint/tendermint/types"
 	"log"
 
@@ -10,7 +11,8 @@ import (
 	"github.com/ignite/cli/ignite/pkg/cosmosclient"
 
 	// Importing the types package of your blog blockchain
-	"github.com/Murphy-hub/hello/x/hello/types"
+	//"github.com/Murphy-hub/hello/x/hello/types"
+	"github.com/stc-community/iot-depin-protocol/x/iotdepinprotocol/types"
 )
 
 func main() {
@@ -19,6 +21,8 @@ func main() {
 	client, err := cosmosclient.New(ctx,
 		cosmosclient.WithNodeAddress("http://localhost:26657"),
 	)
+
+	Subscribe(&client, "Subscriber-2")
 
 	// 定义一个账户名称
 	accountName := "jerry"
@@ -77,9 +81,8 @@ func CreateAccount(client *cosmosclient.Client, accountName string) {
 }
 
 // Subscribe 订阅事件
-func Subscribe(client *cosmosclient.Client) {
+func Subscribe(client *cosmosclient.Client, subscriber string) {
 	_ = client.RPC.Start()
-	const subscriber = "TestCreateKvEvents"
 	eventCh, err := client.RPC.Subscribe(context.Background(), subscriber, ttypes.QueryForEvent(ttypes.EventTx).String())
 	if err != nil {
 		log.Fatal(err)
@@ -94,8 +97,18 @@ func Subscribe(client *cosmosclient.Client) {
 		event := <-eventCh
 		txEvent, ok := event.Data.(ttypes.EventDataTx)
 		if ok {
-			// txEvent.Result.Events
-			fmt.Println(txEvent.String())
+			events := txEvent.Result.GetEvents()
+			for _, val := range events {
+				if val.Type == "stccommunity.iotdepinprotocol.iotdepinprotocol.EventPb" {
+					eventPb, err := sdk.ParseTypedEvent(val)
+					if err != nil {
+						fmt.Println("Error:", err)
+						return
+					}
+					response := eventPb.(*types.EventPb)
+					fmt.Println(response)
+				}
+			}
 		}
 	}
 }
